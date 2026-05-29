@@ -1,169 +1,190 @@
-# Senthos · SCBC Hackathon 2026 · Combined Repo
+# Senthos Sui
 
-Structured-prediction-market protocol with four product primitives (Native Basket, Tranches, Principal Protected Notes, Lending/Repo) plus a custom hedge builder, all running on Solana devnet with live Polymarket data and an NLP-gated market filter.
+Senthos is a structured prediction-market interface running locally against a
+Sui testnet Move package. The current build preserves the Senthos product
+surface - baskets, tranches, principal-protected notes, portfolio views, and
+docs - while routing local testnet actions through Sui mock USDC and a Sui
+binary prediction-market module.
 
-## Start here
-Read `ARCHITECTURE.md` first — it is the single onboarding document that covers the whole system (topology, every page, every endpoint, the math, and the recipe book for common changes).
-Current tranche docs now include the live RFQ sell flow, `% of FV` quote display, and bounded quadratic liquidity scaling model.
-Other docs, in reading order:
-- `PRODUCTS.md` — taxonomy of the four primitives + roadmap
-- `MARKET_FILTER.md` — the NLP + 5-stage filter pipeline
-- `MODEL_INTEGRATION.md` — correlation model and audit
-- `SESSION_NOTES.md` — chronological build log
-- `CREDENTIALS.md` — env var inventory
-- `ONCHAIN.md`, `ONCHAIN_DESIGN.md` — Anchor program details
-- `AUDIT.md`, `SECURITY.md` — security posture
+This repository is the Sui-focused hackathon branch. Legacy Traxis/Solana
+handoff docs, Anchor programs, local command scripts, and correlation tarball
+artifacts have been removed from the published tree so the repo reflects the
+active Sui deployment.
 
-## 60-second quickstart (testnet, clone-and-go)
+## What Works
+
+- Sui testnet Move package deployed with:
+  - `mock_usdc::MOCK_USDC`
+  - `prediction_market`
+- Backend Sui API routes under `/api/sui`.
+- Frontend Sui mode via `NEXT_PUBLIC_CHAIN=sui`.
+- Portfolio reads the configured Sui testnet mock-USDC balance.
+- Basket buy creates a Sui market, mints mock USDC, buys a Sui position object,
+  and links to Sui Explorer.
+- Basket sell resolves and claims the Sui position and clears local holdings.
+- PPN open/close exercises the Sui-backed local position path.
+- Tranche buy/RFQ sell exercises the Sui-backed local position path.
+- Frontend build, backend build, and Move tests pass locally.
+
+## Important Caveat
+
+This is a working local Sui testnet harness, not a production custody model.
+The backend currently signs Sui transactions with a configured local dev key.
+Production must replace that with Sui wallet-signed programmable transaction
+blocks, a real indexer, and audited product-level Move contracts. See
+`detailed.md` for the production-readiness roadmap.
+
+## Active Sui Testnet Deployment
+
+Package:
+
+- Package ID: `0xbb86d6dd74eaa2277f0aac7b2649e094ce4a92697baf3cf08e4fa5b842452cf8`
+- Modules: `mock_usdc`, `prediction_market`
+- Publish transaction: `89uojuuT4nCiewG2ezJhKtQihr4AMmfPMUkPxftVLEJN`
+- Deployer: `0xee770af6c184b101aa91fab0fffdee62c1fecc86fd3e681d978336bf70eead79`
+
+Mock USDC:
+
+- Coin type: `0xbb86d6dd74eaa2277f0aac7b2649e094ce4a92697baf3cf08e4fa5b842452cf8::mock_usdc::MOCK_USDC`
+- Decimals: `6`
+- TreasuryCap: `0x5e50d50e6a82fd9583b87b31b5647cca49cc4d4aa580df7f8d12b56f4b63f90e`
+- Metadata object: `0x55777a6792e90559480d91dfae8871c950f8ea3683a6ba3c051677b5819e5ecc`
+
+Prediction market admin:
+
+- AdminCap: `0xbfebc54352926144ade0f20995b9c0e31e4689929d04b038e49ff0c544b981fa`
+
+## Repository Layout
+
+```text
+app/                    Next.js frontend
+backend/                Express API and Sui local harness
+senthos_sui_v2/         Sui Move package
+public/                 Product assets
+detailed.md             Production readiness roadmap
+SUI_PARITY_PLAN.md      Current Sui parity status
+sui.env.example         Frontend Sui env example
+backend/sui.env.example Backend Sui env example
+```
+
+Some legacy Solana runtime modules still exist under `backend/src` and `app/app`
+because the original product code imports them for fallback paths. They are no
+longer presented as the deployment target. The active local mode is Sui.
+
+## Quickstart
+
+Prerequisites:
+
+- Node.js 20+
+- npm
+- Sui CLI configured for testnet
+- A Sui testnet account that owns the deployed package caps if you want to mint
+  the existing mock USDC
+
+Install dependencies:
+
 ```bash
-# 1. clone
-git clone https://github.com/notveiker/SCBC-Hackathon-2026.git
-cd SCBC-Hackathon-2026
-
-# 2. env files — defaults already point at the shared testnet
-cp .env.local.testnet.example .env.local
-cp backend/.env.testnet.example backend/.env
-
-# 3. install deps (root + backend)
 npm install
 (cd backend && npm install)
-
-# 4. run — two terminals
-(cd backend && npm run dev)          # terminal 1 → backend on :3001 (+ monitor :3002)
-npm run dev                          # terminal 2 → frontend on :3000
-
-# 5. open it
-open http://localhost:3000           # landing
-open http://localhost:3000/app       # authenticated app
 ```
 
-In Phantom: **Settings → Developer Settings → Testnet Mode**. Then in the app,
-connect your wallet, click **Request 1 SOL on testnet**, click **Get 100 mock
-USDC**, and you can buy positions on any of the 11 baskets.
+Configure env:
 
-Full start/stop + verification commands are in `ARCHITECTURE.md` §4.
-
-## Devnet quickstart (recommended — testnet RPC is heavily throttled)
-Branch `deploy/devnet` ships a parallel devnet deployment. Programs,
-mock USDC mint, and all 9 active bundle vaults are already on devnet — no
-redeploy needed. Just switch the env and start the servers.
 ```bash
-# From a fresh clone of deploy/devnet:
-cp backend/.env.devnet.example backend/.env.devnet
-cp .env.local.devnet.example .env.local.devnet
-./SWITCH-CLUSTER.command devnet      # copies → backend/.env + .env.local, kills :3000/:3001
-(cd backend && npm run dev)          # terminal 1
-npm run dev                          # terminal 2
-```
-Phantom stays in Testnet Mode (the toggle enables both devnet + testnet).
-Pick Devnet in the network selector if your wallet shows one. Airdrop
-your Phantom some devnet SOL at https://faucet.solana.com. Then hit
-**Get Mock USDC** in the app and you're live.
-
-On-chain state (reuse — don't redeploy unless you know why):
-- `traxis_vault`: `DyQDCYn82yGdJzmFaHE4sHruiS3QR9fWsf19bPbWpZvC`
-- `traxis_ppn`: `8smi6Yvs2Q2MxA9dcbsLMUi6P94SVgHKXic5ZcNiiZEK`
-- Mock USDC: `43kKa1CTQy8xU5uqEv2Kwx1gGqGc5nQFx7n5d8E5Fo1b`
-- Fee recipient ATA: `Agf134nqwxfanp94pEoSeLyG1ZL97nUKiVyto3jfsiqf` (already created)
-
-Latency on devnet is dramatically better: `/api/dev/balances` in ~30ms
-(vs 8s + 429s on testnet).
-
-### If buys land but STHS tokens don't show in the portfolio
-The shared Supabase project has one `vault_pda` / `trax_mint` column per
-bundle and no cluster dimension, so switching between testnet and devnet
-with the same DB silently overwrites each cluster's cache with the other
-cluster's PDAs. Backend tx-building derives PDAs fresh every time so on-
-chain deposits always land correctly, but the frontend reads `trax_mint`
-from `/api/bundles` to poll STHS balances — a stale mint means your
-tokens exist on-chain but invisible in the UI.
-
-One-shot fix any time this happens:
-```bash
-cd backend && npx tsx ../scripts/sync-vault-cache.ts
-```
-It clears the stale cache, re-derives PDAs from the currently active
-program IDs, and writes the correct values back. Idempotent on on-chain
-state — won't create duplicate vaults. Expect ~10 seconds runtime.
-
-## Merge provenance
-This folder merges **three branches** of [LuKresXD/SCBC-Hackathon-2026](https://github.com/LuKresXD/SCBC-Hackathon-2026) into a single working tree:
-
-| Branch | Contribution |
-|---|---|
-| `main` (Senthos rebrand) | Next.js 16 frontend + Express/Supabase/Polymarket backend |
-| `phase-15-devnet-deploy` | Solana Anchor on-chain programs (`traxis_vault`, `traxis_ppn`) + on-chain bridge in the backend |
-| `ml-model` | Senthos correlation model audit artifacts, Monte-Carlo, walk-forward metrics |
-
-## Layout
-```
-SCBC-Hackathon-2026-combined/
-├── app/                             # Next.js 16 frontend (Senthos UI)
-├── public/                          # Frontend static assets
-├── backend/                         # Express API (Supabase, Polymarket, Solana bridge)
-│   └── src/
-│       ├── routes/                  # REST routes (bundles, nav, deposit, ppn, alerts…)
-│       ├── services/                # cron, pricing, polymarket, solana, onchain-bridge
-│       ├── solana/                  # Anchor provider, program handles, PDA derivation
-│       └── idl/                     # traxis_vault.json, traxis_ppn.json (synced from anchor build)
-├── programs/                        # Anchor programs (Rust)
-│   ├── traxis_vault/                # Bundle vault (deposit/redeem/resolve/finalize)
-│   ├── traxis_ppn/                  # Principal-protected notes + Meteora mock adapter
-│   └── traxis_lending/              # Lending pool (supply, borrow, repay, withdraw)
-├── scripts/                         # deploy-devnet.sh, init-demo-vaults.ts, sync-idl.sh…
-├── migrations/                      # Anchor migration (deploy.ts)
-├── tests/                           # Anchor integration tests (mocha/chai)
-├── traxis-correlation-deliverables/ # ML model artifacts, reports, tarball
-├── *.command                        # macOS double-click helpers for build/deploy
-├── Anchor.toml / Cargo.toml / rust-toolchain.toml
-├── ONCHAIN.md / ONCHAIN_DESIGN.md / STATE.md / SECURITY.md
-└── package.json                     # Root = frontend (Next.js 16)
+cp sui.env.example .env.local
+cp backend/sui.env.example backend/.env
 ```
 
-## Running locally
+Then edit `backend/.env` if your local Sui keystore path differs:
 
-### 1. Frontend (Next.js 16 · Turbopack)
-```bash
-npm install           # already done
-npm run dev           # http://localhost:3000
+```text
+SUI_KEYSTORE_PATH=/path/to/.sui/sui_config
+SUI_ACTIVE_ADDRESS=0xee770af6c184b101aa91fab0fffdee62c1fecc86fd3e681d978336bf70eead79
 ```
 
-### 2. Backend (Express + tsx watch)
+Run the backend:
+
 ```bash
 cd backend
-npm install           # already done
-cp .env.example .env  # already done with devnet defaults
-npm run dev           # http://localhost:3001
+npm run dev
 ```
 
-The backend will run without real Supabase credentials  -  `config/index.ts` was softened to warn instead of exit. All list/portfolio endpoints will return empty arrays. To get real DB-backed behaviour, fill in `SUPABASE_URL` and `SUPABASE_ANON_KEY` in `backend/.env`.
+Run the frontend in another terminal:
 
-### 3. On-chain (Anchor programs on Solana devnet)
-The two programs are **already deployed on Solana devnet**:
-
-| Program | Devnet Address |
-|---|---|
-| `traxis_vault` | `DY7NAimrQZY7SxveXTb38XN7H69wAXjZZj8DRHto4Aat` |
-| `traxis_ppn`   | `3wDHsr9EnWkF968zYmSsj4hShNkAyFV6r7zxPrjqWNsp` |
-
-To rebuild / redeploy you need the Solana toolchain (not installed on this host):
 ```bash
-# Install prerequisites (only needed to rebuild programs)
-sh -c "$(curl -sSfL https://release.anchor-lang.com/v0.30.1/install)"
-sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
-rustup install 1.75.0
-
-# Build + deploy
-anchor build
-bash scripts/deploy-devnet.sh
+npm run dev
 ```
 
-## Patches applied during the merge
-1. `tsconfig.json`  -  target bumped to ES2020 and `programs/scripts/tests/migrations/traxis-correlation-deliverables/` added to `exclude` so Next.js 16 type check doesn't pull in the Anchor workspace.
-2. `backend/src/index.ts`  -  removed `app.options('*', cors())` (Express 4.22 / path-to-regexp rejects the bare `*`) and migrated `express-rate-limit` options to v8 (`limit`, `standardHeaders: 'draft-7'`, explicit `validate`); added `DISABLE_RATE_LIMIT` env gate.
-3. `backend/src/config/index.ts`  -  missing Supabase creds now warn instead of `process.exit(1)`.
-4. `backend/src/middleware/requestLogger.ts`  -  added request-arrival log line.
-5. `backend/.env`  -  populated with real devnet program IDs and `DISABLE_RATE_LIMIT=true`.
+Open:
 
-## Deep audit
-See `AUDIT.md` in this folder for a full rundown of what works and what doesn't.
+- Frontend: `http://localhost:3000`
+- Portfolio: `http://localhost:3000/app/portfolio`
+- Baskets: `http://localhost:3000/app/basket`
+- Tranches: `http://localhost:3000/app/tranche`
+- PPN: `http://localhost:3000/app/ppn`
+- Backend status: `http://localhost:3001/api/sui/status`
+- Monitor: `http://localhost:3002`
+
+## Verification
+
+Frontend build:
+
+```bash
+npm run build
+```
+
+Backend build:
+
+```bash
+cd backend
+npm run build
+```
+
+Move tests:
+
+```bash
+sui move test --path senthos_sui_v2
+```
+
+Backend Sui status:
+
+```bash
+curl http://localhost:3001/api/sui/status
+```
+
+## Sui API Surface
+
+Main local Sui routes:
+
+- `GET /api/sui/status`
+- `POST /api/sui/mock-usdc/mint`
+- `POST /api/sui/markets`
+- `POST /api/sui/markets/:marketId/buy`
+- `POST /api/sui/markets/:marketId/resolve`
+- `POST /api/sui/markets/:marketId/claim`
+- `POST /api/sui/local/basket/deposit`
+- `POST /api/sui/local/basket/redeem`
+
+The `/api/sui/local/basket/*` routes are the current local bridge used by
+basket, tranche, and PPN UI flows.
+
+## Documentation
+
+- `detailed.md` - where the project stands and what is needed for production.
+- `SUI_PARITY_PLAN.md` - current parity status and local architecture.
+- `senthos_sui_v2/DEPLOYMENT.md` - deployed Sui package/object IDs.
+- `backend/README.md` - backend-specific Sui setup.
+
+## Production Roadmap
+
+The short version:
+
+1. Replace backend CLI signing with Sui SDK transaction builders.
+2. Add real Sui wallet connect/signing in the frontend.
+3. Build a Sui event/object indexer.
+4. Replace browser-local virtual positions with indexed chain state.
+5. Move basket, tranche, and PPN accounting into native audited Move modules.
+6. Integrate DeepBook Predict or an explicit settlement source.
+7. Add CI for frontend, backend, Move tests, browser e2e, and secret scanning.
+
+Full roadmap: `detailed.md`.

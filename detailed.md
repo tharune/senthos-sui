@@ -183,9 +183,9 @@ Needed:
 - Add structured logging, metrics, and alerting for Sui RPC errors, failed PTBs,
   stale indexer cursors, and settlement failures.
 - Add rate limits and abuse controls around any testnet faucet or admin action.
-- Rotate and remove legacy Solana-only env assumptions from production configs.
+- Remove remaining legacy fallback env assumptions from production configs.
 - Update the monitor to show Sui RPC, package object state, event lag, and
-  indexed checkpoint freshness instead of Solana program status.
+  indexed checkpoint freshness.
 - Add integration tests that run against a local Sui test validator or a
   dedicated testnet namespace.
 
@@ -343,10 +343,11 @@ Deliverables:
 - Basket, tranche, and PPN flows use local wrappers around a generic Sui
   prediction-market primitive.
 - Portfolio continuity uses browser-local metadata until an indexer exists.
-- Legacy Solana code remains in the repo for reference and fallback, but Sui
-  mode is selected by env.
-- The monitor still contains legacy Solana-oriented panels and should be
-  replaced with Sui-native health metrics.
+- Redundant Traxis/Solana docs, Anchor program source, command helpers, and
+  correlation deliverables have been pruned from the published branch. A few
+  legacy fallback modules remain where the current app still imports them.
+- The monitor should be replaced with Sui-native health metrics before
+  production.
 
 ## Definition Of Production Ready
 

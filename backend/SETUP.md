@@ -1,46 +1,33 @@
-# LuKres Backend Setup
+# Backend Setup
 
-## 1. Environment
-
-```bash
-cp .env.example .env
-```
-
-Fill in your Supabase credentials in `.env`:
-- `SUPABASE_URL` - your project URL (e.g. `https://abc123.supabase.co`)
-- `SUPABASE_ANON_KEY` - your anon/public key
-
-## 2. Install
+## 1. Install
 
 ```bash
 npm install
 ```
 
-## 3. Create tables
-
-Go to your Supabase dashboard -> SQL Editor -> New Query.
-Paste the contents of `src/db/schema.sql` and run it.
-
-## 4. Verify
+## 2. Configure Sui local mode
 
 ```bash
-npm run setup
+cp sui.env.example .env
 ```
 
-This tests Supabase connectivity and Polymarket API access. If tables are missing it will print the schema for you.
+Set `SUI_KEYSTORE_PATH` to your local Sui config directory and confirm that
+`SUI_ACTIVE_ADDRESS` is the testnet account you want the local harness to use.
 
-## 5. Seed demo data
+## 3. Verify Sui config
 
 ```bash
-npm run seed
+sui client active-env
+sui client active-address
+curl http://localhost:3001/api/sui/status
 ```
 
-Creates two demo bundles (LK-90-0430 and LK-70-0515) with 10 legs each. Fetches live probabilities from Polymarket. Idempotent - safe to run multiple times.
-
-## 6. Run
+## 4. Run
 
 ```bash
 npm run dev
 ```
 
-Server starts on port 3001 (or whatever PORT is set to in .env).
+The API starts on `http://localhost:3001`. The monitor starts on
+`http://localhost:3002`.

@@ -2382,8 +2382,8 @@ function SocialIcon({ id }: { id: string }) {
 
 const SOCIALS: { id: string; label: string; href: string }[] = [
   { id: "twitter", label: "X",      href: "https://x.com" },
-  { id: "github",  label: "GitHub", href: "https://github.com/LuKresXD/SCBC-Hackathon-2026" },
-  { id: "docs",    label: "Docs",   href: "https://github.com/LuKresXD/SCBC-Hackathon-2026#readme" },
+  { id: "github",  label: "GitHub", href: "https://github.com/tharune/senthos-sui" },
+  { id: "docs",    label: "Docs",   href: "https://github.com/tharune/senthos-sui#readme" },
 ];
 
 // Landing-page footer links. Kept in sync with the authenticated
@@ -3278,9 +3278,9 @@ export default function App() {
             </div>
             <div style={{padding:12}}>
               {[
-                {name:"Phantom",sub:"Detected",color:"#4c44c6",initials:"Ph",available:true,url:""},
-                {name:"Backpack",sub:"Install",color:"#e33d3d",initials:"Ba",available:false,url:"https://backpack.app/"},
-                {name:"Solflare",sub:"Install",color:"#fc7227",initials:"Sf",available:false,url:"https://solflare.com/"},
+                {name:"Sui Wallet",sub:"Configured",color:"#4da2ff",initials:"SW",available:true,url:""},
+                {name:"Suiet",sub:"Install",color:"#1f8fff",initials:"Su",available:false,url:"https://suiet.app/"},
+                {name:"Ethos",sub:"Install",color:"#7c5cff",initials:"Et",available:false,url:"https://ethoswallet.xyz/"},
               ].map(w=>(
                 <a key={w.name} href={!w.available?w.url:undefined} target={!w.available?"_blank":undefined} rel="noreferrer" onClick={(e)=>{
                     if(w.available){e.preventDefault();setWalletConnected(true);setShowWalletModal(false);}

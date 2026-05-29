@@ -1,7 +1,0 @@
-{
-  "target_basket_size": 50,
-  "optimized_basket_size": 50,
-  "optimized_internal_mean_pred_abs_corr": 0.0,
-  "random_internal_mean_pred_abs_corr": 0.001135984586209667,
-  "improvement_vs_random": 0.001135984586209667
-}

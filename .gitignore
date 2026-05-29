@@ -45,7 +45,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Rust / Anchor build artifacts
+# Legacy Rust/Move build artifacts
 target/
 Cargo.lock
 

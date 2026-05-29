@@ -1,9 +1,0 @@
-{
-  "windows": 6,
-  "optimized_mean_realized_abs_corr": 0.02424344601242258,
-  "random_mean_realized_abs_corr": 0.07246243963475006,
-  "mean_improvement": 0.04821899362232748,
-  "t_statistic_random_gt_optimized": 12.337185628057231,
-  "p_value": 3.098117675952937e-05,
-  "statistically_significant_improvement_0_05": true
-}

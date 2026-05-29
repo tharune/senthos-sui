@@ -186,8 +186,7 @@ function HackathonNote() {
           maxWidth: 640,
         }}
       >
-        Senthos is a hackathon project built for SCBC 2026 at USC (build
-        window April 13–20, 2026; presentation April 22–23, 2026). The
+        Senthos is a hackathon project built for the Sui ecosystem. The
         application is deployed to Sui testnet only. It is not
         a financial product, a securities offering, or investment advice,
         and no real capital is routed through any of its flows. There
@@ -1716,7 +1715,7 @@ function FaqAll() {
       />
       <Faq
         q="Who built the project?"
-        a="Students at USC, for SCBC 2026. Build window: April 13–20, 2026. Presentation: April 22–23, 2026."
+        a="A hackathon team building Senthos as a Sui testnet structured prediction-market prototype."
       />
       <Faq
         q="How many baskets are there?"

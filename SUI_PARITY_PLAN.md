@@ -58,5 +58,7 @@ hackathon build against Sui testnet assets and Move contracts.
 - The current build is intentionally a local hackathon harness. For production,
   swap CLI-backed backend signing for Sui wallet/user-signed PTBs and replace
   the local position bridge with an event/object indexer.
-- The original Solana modules are left in the repo for reference and fallback;
-  Sui local mode is selected by env.
+- Redundant Traxis/Solana docs, Anchor program source, command helpers, and
+  correlation deliverables were pruned from the published Sui branch. A few
+  legacy runtime modules remain only where the current TypeScript app still
+  imports fallback paths.

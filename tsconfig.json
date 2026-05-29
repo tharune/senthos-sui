@@ -34,10 +34,6 @@
   "exclude": [
     "node_modules",
     "backend",
-    "programs",
-    "scripts",
-    "tests",
-    "migrations",
-    "traxis-correlation-deliverables"
+    "senthos_sui_v2"
   ]
 }
