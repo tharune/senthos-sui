@@ -1,0 +1,6 @@
+# Pin Rust 1.75.0 to match Solana's BPF platform-tools bundled cargo.
+# Inside the Docker build container this matches perfectly; on the host
+# 1.75 is installed as a side toolchain during phase 2.
+[toolchain]
+channel = "1.75.0"
+profile = "minimal"

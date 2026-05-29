@@ -1,0 +1,12 @@
+{
+  "execution_status": "complete",
+  "all_checks_passed": true,
+  "classifier_precision": 0.9432484665154188,
+  "walkforward_p_value": 3.098117675952937e-05,
+  "walkforward_mean_improvement": 0.04821899362232748,
+  "var_95": 0.02430657748883393,
+  "var_99": 0.03396261664229757,
+  "cvar_95": 0.0303083680621449,
+  "cvar_99": 0.039027140655037755,
+  "production_package": "/root/traxis-correlation/traxis-correlation-production-20260417T071458Z.tar.zst"
+}

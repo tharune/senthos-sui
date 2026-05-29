@@ -1,0 +1,48 @@
+generated_at_utc=2026-04-17T07:14:59+00:00
+package_file=/root/traxis-correlation/production/traxis-correlation-production-20260417T071458Z.tar.zst
+--- files ---
+total 11M
+-rw-r--r-- 1 root root 3.5M Apr 17 07:14 corr_abs_regressor_lgbm.joblib
+-rw-r--r-- 1 root root 4.7M Apr 17 07:14 corr_class_classifier_lgbm.joblib
+-rw-r--r-- 1 root root  12K Apr 17 07:14 correlation_archetypes_step17.json
+-rw-r--r-- 1 root root 3.7K Apr 17 07:14 correlation_archetypes_step17.md
+-rw-r--r-- 1 root root 3.7K Apr 17 07:14 manifest-20260417T071420Z.txt
+-rw-r--r-- 1 root root  161 Apr 17 07:14 manifest-20260417T071458Z.txt
+-rw-r--r-- 1 root root  371 Apr 17 07:14 model_metrics_step12.json
+-rw-r--r-- 1 root root  309 Apr 17 07:14 monte_carlo_step14.json
+-rw-r--r-- 1 root root  220 Apr 17 07:14 optimization_metrics_step13.json
+-rw-r--r-- 1 root root  741 Apr 17 07:14 step15_integration_report.json
+-rw-r--r-- 1 root root 2.7M Apr 17 07:14 traxis-correlation-production-20260417T071420Z.tar.zst
+drwxr-xr-x 2 root root 4.0K Apr 17 07:14 validation
+-rw-r--r-- 1 root root  323 Apr 17 07:14 walkforward_step16_metrics.json
+--- sha256 ---
+a06ceb7fff9f3ee8f90fbbca25116d48cc026cd295455d49d315f68ceb390a43  ./corr_abs_regressor_lgbm.joblib
+93e256a76887e837fefdc76cdbc64202ec8dc6e2ce359054f0542a77cf1bcc65  ./corr_class_classifier_lgbm.joblib
+ee84b177bdaccacfa90482bf4d568259d3e9c24b9b3df7f26fa08b77ae47ceaa  ./correlation_archetypes_step17.json
+dc7e297c705609587743e5a2ca38c38f839532d03d6f5517ae392130947fbbed  ./correlation_archetypes_step17.md
+d5ae83825027e579c85fd395814cd624adb1e2f792b7b8641e9fa503c558ea78  ./manifest-20260417T071420Z.txt
+5696418b914904f880de6f09023d7520213f4c671d072c0302c6db498ad191d6  ./manifest-20260417T071458Z.txt
+cbd546dcd8a195a9a188878ec129ada39539381740be27e7cc582b74fdacf9f1  ./model_metrics_step12.json
+4e1d1d22d3b72c1fe735de8850e05be6932b22834e39965540e76d2b627b2b7e  ./monte_carlo_step14.json
+9192e59a58120da951cc88c5a2f7fc5780f145acdda133c3e5a325e4e616282e  ./optimization_metrics_step13.json
+c6e87d628660279dcbd174b96f7b525b065b2d433c30fcd069a2972f980c0d09  ./step15_integration_report.json
+0331fa952de16d6732e1756b6be82c315929e71536ddbb3d5512d66ddaa10e78  ./traxis-correlation-production-20260417T071420Z.tar.zst
+005a0dd617e2349c6adc731d0a3824a347947494182a3f1236dcb005f4dce188  ./walkforward_step16_metrics.json
+82065c48e7967382817898fbaa01ec9b01a9fb366b3627d19ded06ee3224b17b  ./validation/data-inventory.txt
+d2e57b53e726f241ede0ff1bc94ecb95258d68b103be22a363e6a7e20685da80  ./validation/step10-correlations.log
+83f5918cd5981026b8964a561564faf9dfcde1afd2ceabf23678e6a8e89216d0  ./validation/step11-features.log
+d7b93ac56d2470f69d4d46d24270c6d224f241c49b1c2f57a627ea8f0e45fe74  ./validation/step12-train.log
+4a9c53948ef74514fc733fe32034ad0e27fc89e3e7ffc1e63ab00e4a4ef40bef  ./validation/step13-optimize.log
+365f909b4dd009e00e90aaa5e9040adf875d17666a06d03f4f92744191a82f45  ./validation/step14-montecarlo.log
+701a7a64eaf921e76e58c0a842c3a4432bf221dc4f4afa79f2d40da1a1d7e6ff  ./validation/step15-integration.log
+f945de2529c48677d99d6470192e67de9ab0a353c1b602167080bcabd71c6977  ./validation/step16-walkforward.log
+cc3177f0998ab0aad988c0129496336c05f6d5ededaf1889ce5db81e364508b0  ./validation/step17-archetypes.log
+1bddae76294fbc9aef23b29cda8f5629230ce0f0573721de7a662e42815ddf84  ./validation/step3-data-exploration.txt
+977b0bd084280d3a4773704691fcb34cf97ac6fd8111a9f4737c6c80f97919f1  ./validation/step3-schema-map.json
+30f5b14550c01aff232ea29cdd10c8a34640e90e991b57ca305b3259752d9a01  ./validation/step4-normalize.log
+c6a454b03273c1647401fde006c0f95a3fe55e4d76f81fdcaf38df77ca3ceebe  ./validation/step5-timeseries.log
+1fc4e18f4fb2a213cd06f95820702b0d190e81f4d94d090b46e8d8f585e96d05  ./validation/step6-quality-filter.log
+bb637cd818a0747ee57e23ce27a0472290ad40749fe0668b7507360c8fadfea5  ./validation/step7-embeddings.log
+2f7100390320475f499ff6a151c9c5b7269f6d086fb41d4a0f9f0cd4f55e4be3  ./validation/step8-cluster.log
+50dc26f99fd50463dc03a99ce5261d27c3225da6e6fa1a6caa98ac58854c1dc7  ./validation/step9-entities.log
+8bc2bd8a8fe8283ee80e822193ea9833b2bc2b7ec50e8e56ff0167e7c7a45172  ./validation/system-info.txt

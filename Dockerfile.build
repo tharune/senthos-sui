@@ -1,0 +1,48 @@
+# Docker image with pre-edition2024 dep tree. Forced to linux/amd64 because
+# Anza/Solana v1.18.26 only publishes x86_64-unknown-linux-gnu platform-tools —
+# the aarch64-unknown-linux-gnu artifacts 404. Runs under Rosetta 2 on Apple
+# Silicon; slower than native but the only combo with working BPF tooling.
+FROM --platform=linux/amd64 rust:1.75-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PATH="/root/.cargo/bin:/root/.local/share/solana/install/active_release/bin:/root/.avm/bin:${PATH}"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      build-essential pkg-config libssl-dev libudev-dev \
+      python3 git curl ca-certificates jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Solana 1.18.26 — platform-tools predate cmov 0.5.3 / edition2024.
+# Install must actually put `solana` on PATH; verify after.
+RUN (sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.26/install)" \
+ || sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)") \
+ && ls -la /root/.local/share/solana/install/active_release/bin/ \
+ && /root/.local/share/solana/install/active_release/bin/solana --version
+
+# Anchor 0.30.1 CLI
+RUN cargo install --locked --git https://github.com/coral-xyz/anchor avm --tag v0.30.1
+RUN avm install 0.30.1 && avm use 0.30.1
+
+# Anchor source for frozen Cargo.lock
+RUN git clone --depth 1 --branch v0.30.1 https://github.com/coral-xyz/anchor.git /opt/anchor-src
+
+# Pre-warm platform-tools
+RUN mkdir -p /tmp/prewarm && cd /tmp/prewarm \
+ && cargo init --lib tmp && cd tmp \
+ && (cargo build-sbf --force-tools-install 2>&1 | tail -5 || true)
+
+WORKDIR /workdir
+
+CMD ["bash", "-c", "\
+  echo '==== Copying Anchor 0.30.1 frozen Cargo.lock ===='; \
+  if [ -f /opt/anchor-src/Cargo.lock ]; then \
+    cp /opt/anchor-src/Cargo.lock /workdir/Cargo.lock; \
+  fi; \
+  rustup default 1.75.0; \
+  echo '==== Build vault alone (no cpi feature) ===='; \
+  anchor build -p traxis_vault 2>&1 | tail -200; \
+  echo '==== Build PPN alone (vault gets cpi only here) ===='; \
+  anchor build -p traxis_ppn   2>&1 | tail -200; \
+  echo '==== target/deploy ===='; \
+  ls -la target/deploy/ 2>/dev/null || true \
+"]

@@ -1,0 +1,195 @@
+/*
+ * Wallet-adapter modal override.
+ * Goal: match the density + polish of Jupiter / Drift / Kamino modals.
+ */
+
+:root {
+  --senthos-bg: #05080c;
+  --senthos-surface: #0a0f18;
+  --senthos-card: #0d131c;
+  --senthos-card-hover: #121a26;
+  --senthos-border: rgba(45, 212, 191, 0.12);
+  --senthos-border-hover: rgba(45, 212, 191, 0.28);
+  --senthos-text: #eef2f7;
+  --senthos-text-secondary: #6b8099;
+  --senthos-text-muted: #3a4f62;
+  --senthos-teal: #2dd4bf;
+}
+
+/* ---------- Overlay ---------- */
+.wallet-adapter-modal-overlay {
+  background: rgba(0, 0, 0, 0.72) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+}
+
+/* ---------- Container ---------- */
+.wallet-adapter-modal-wrapper {
+  max-width: 380px !important;
+  width: calc(100% - 40px) !important;
+  background: var(--senthos-card) !important;
+  border: 0.5px solid var(--senthos-border) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(45, 212, 191, 0.04) inset !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  flex: initial !important;
+}
+
+.wallet-adapter-modal-container {
+  padding: 0 !important;
+}
+
+/* ---------- Title ---------- */
+.wallet-adapter-modal-title {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  letter-spacing: -0.005em !important;
+  color: var(--senthos-text) !important;
+  text-align: left !important;
+  padding: 20px 22px 6px !important;
+  margin: 0 !important;
+}
+
+/* Sub-title line shown under the main title in some versions */
+.wallet-adapter-modal-title + p,
+.wallet-adapter-modal-title + div {
+  padding: 0 22px 14px !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 12px !important;
+  color: var(--senthos-text-secondary) !important;
+  text-align: left !important;
+}
+
+/* ---------- Close button ---------- */
+.wallet-adapter-modal-button-close {
+  position: absolute !important;
+  top: 14px !important;
+  right: 14px !important;
+  width: 26px !important;
+  height: 26px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border-radius: 6px !important;
+  border: 0.5px solid var(--senthos-border) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background 0.15s, border-color 0.15s !important;
+}
+.wallet-adapter-modal-button-close:hover {
+  background: var(--senthos-surface) !important;
+  border-color: var(--senthos-border-hover) !important;
+}
+.wallet-adapter-modal-button-close svg {
+  width: 12px !important;
+  height: 12px !important;
+  fill: var(--senthos-text-secondary) !important;
+  transition: fill 0.15s !important;
+}
+.wallet-adapter-modal-button-close:hover svg {
+  fill: var(--senthos-text) !important;
+}
+
+/* ---------- Wallet list ---------- */
+.wallet-adapter-modal-list {
+  margin: 0 !important;
+  padding: 10px 14px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  list-style: none !important;
+}
+
+.wallet-adapter-modal-list li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button {
+  width: 100% !important;
+  height: 52px !important;
+  padding: 0 14px !important;
+  border-radius: 10px !important;
+  background: var(--senthos-surface) !important;
+  border: 0.5px solid transparent !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--senthos-text) !important;
+  letter-spacing: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  transition: background 0.15s, border-color 0.15s !important;
+  box-shadow: none !important;
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button:hover {
+  background: var(--senthos-card-hover) !important;
+  border-color: var(--senthos-border-hover) !important;
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button-start-icon,
+.wallet-adapter-modal-list .wallet-adapter-button-end-icon {
+  margin: 0 !important;
+}
+.wallet-adapter-modal-list .wallet-adapter-button-start-icon img,
+.wallet-adapter-modal-list .wallet-adapter-button-start-icon svg {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 6px !important;
+}
+
+/* "Detected" badge that Wallet Standard adapters display on the right. */
+.wallet-adapter-modal-list .wallet-adapter-button span {
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.06em !important;
+  color: var(--senthos-teal) !important;
+  text-transform: uppercase !important;
+  margin-left: auto !important;
+  padding: 2px 8px !important;
+  border: 0.5px solid var(--senthos-border) !important;
+  border-radius: 100px !important;
+  background: rgba(45, 212, 191, 0.08) !important;
+}
+
+/* ---------- "More options" toggle ---------- */
+.wallet-adapter-modal-list-more {
+  margin: 0 14px 14px !important;
+  padding: 10px 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-top: 0.5px solid var(--senthos-border) !important;
+  color: var(--senthos-text-secondary) !important;
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace !important;
+  font-size: 11px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
+  width: calc(100% - 28px) !important;
+  cursor: pointer !important;
+  transition: color 0.15s !important;
+}
+.wallet-adapter-modal-list-more:hover {
+  color: var(--senthos-text) !important;
+}
+.wallet-adapter-modal-list-more svg {
+  margin-left: 6px !important;
+  transition: transform 0.2s !important;
+}
+
+/* ---------- Collapse chevron ---------- */
+.wallet-adapter-modal-collapse-button-icon {
+  transition: transform 0.2s !important;
+}
+
+/* ---------- Trigger button (outside modal, in the header) ---------- */
+/* Already themed inside Header.tsx via its own <style> block; these rules
+   only apply to buttons inside the modal list. */

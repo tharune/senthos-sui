@@ -1,0 +1,40 @@
+{
+    "generated_at":  "2026-04-17T07:35:33.0331466Z",
+    "hashes":  {
+                   "package_sha256_local":  "3d628e04be21abbe745c764d5baff7c2bf86a087f5e2cb2830acd13ddda62327"
+               },
+    "key_metrics":  {
+                        "CVaR_95":  0.0303083680621449,
+                        "CVaR_99":  0.039027140655037755,
+                        "classification_precision":  0.9432484665154188,
+                        "VaR_95":  0.02430657748883393,
+                        "walkforward_p_value":  3.098117675952937E-05,
+                        "VaR_99":  0.03396261664229757,
+                        "optimization_improvement_vs_random":  0.001135984586209667,
+                        "walkforward_mean_improvement":  0.04821899362232748
+                    },
+    "checks":  {
+                   "walkforward_significant":  true,
+                   "optimization_beats_random":  true,
+                   "risk_cvar_monotonic":  true,
+                   "detailed_audit_pass":  true,
+                   "all_required_files_present":  true,
+                   "walkforward_improvement_positive":  true,
+                   "final_audit_pass":  true,
+                   "classifier_precision_ge_0_80":  true,
+                   "risk_var_monotonic":  true
+               },
+    "exists":  {
+                   "optimization_metrics_step13.json":  true,
+                   "detailed_audit_report.json":  true,
+                   "manifest-20260417T071458Z.txt":  true,
+                   "monte_carlo_step14.json":  true,
+                   "final_summary_step19.md":  true,
+                   "detailed_audit_report.md":  true,
+                   "final_summary_step19.json":  true,
+                   "final_audit_step18.json":  true,
+                   "traxis-correlation-production-20260417T071458Z.tar.zst":  true,
+                   "model_metrics_step12.json":  true,
+                   "walkforward_step16_metrics.json":  true
+               }
+}
