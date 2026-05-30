@@ -10,6 +10,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+    "paths": {
+      "@mysten/sui/*": ["./node_modules/@mysten/sui/dist/*/index.d.mts"]
+    },
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true
