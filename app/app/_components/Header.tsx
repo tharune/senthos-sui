@@ -18,6 +18,7 @@ const NAV_LEFT = [
   { id: "basket",    label: "Constellations", href: "/app/basket" },
   { id: "tranche",   label: "Tranches",       href: "/app/tranche" },
   { id: "ppn",       label: "PPN",            href: "/app/ppn" },
+  { id: "distribution", label: "Distribution", href: "/app/distribution" },
   { id: "docs",      label: "About",          href: "/app/docs" },
 ];
 
@@ -79,7 +80,14 @@ export function Header() {
             </span>
           </Link>
 
-          <nav style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <nav style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 18,
+            overflowX: "auto",
+            whiteSpace: "nowrap",
+            scrollbarWidth: "none",
+          }}>
             {NAV_LEFT.map((n) => {
               const active = pathname === n.href || (n.href !== "/app" && pathname?.startsWith(n.href));
               return (

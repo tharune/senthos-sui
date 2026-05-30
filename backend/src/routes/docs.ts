@@ -39,6 +39,41 @@ const apiDocs = {
       response: '{ network, active_env, active_address, package_id, mock_usdc_type, balances }',
     },
     {
+      method: 'GET',
+      path: '/api/distribution/templates',
+      description: 'Lists bucketed distribution-market products inspired by Paradigm distribution markets. The frontend uses these templates to render live probability-curve controls.',
+      response: '{ templates: DistributionTemplate[] }',
+    },
+    {
+      method: 'POST',
+      path: '/api/distribution/quote',
+      description: 'Normalizes a submitted probability curve, prices collateral/fees, and returns expected value, L2 distance, entropy, and bucket payouts.',
+      body: {
+        market_id: 'Distribution template id',
+        weights: 'number[] with one entry per bucket',
+        amount_usdc: 'UI amount in mock USDC',
+      },
+      response: '{ quote: DistributionQuote }',
+    },
+    {
+      method: 'POST',
+      path: '/api/distribution/open',
+      description: 'Opens a Sui-backed distribution-market receipt by minting mock USDC, creating a local Sui market, and buying the YES receipt for the submitted full curve.',
+      body: {
+        market_id: 'Distribution template id',
+        weights: 'number[] with one entry per bucket',
+        amount_usdc: 'UI amount in mock USDC',
+        recipient: 'optional Sui recipient address; defaults to active address',
+      },
+      response: '{ position: DistributionPosition }',
+    },
+    {
+      method: 'POST',
+      path: '/api/distribution/positions/:id/settle',
+      description: 'Settles the backing Sui receipt for a local distribution position and records resolve/claim digests.',
+      response: '{ position: DistributionPosition }',
+    },
+    {
       method: 'POST',
       path: '/api/sui/mock-usdc/mint',
       description: 'Mints testnet mock USDC to a recipient using the configured local TreasuryCap owner.',

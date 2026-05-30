@@ -1,13 +1,13 @@
 # Senthos Sui Production Readiness Handoff
 
-Last updated: May 29, 2026
+Last updated: May 30, 2026
 
 ## Current Status
 
 This repository is a working Sui testnet port of the Senthos prediction-market
 product surface. The app keeps the Senthos frontend flows intact while routing
-local basket, tranche, and PPN actions through a deployed Sui Move package and
-mock-USDC collateral.
+local basket, tranche, PPN, and distribution-market actions through a deployed
+Sui Move package and mock-USDC collateral.
 
 The current build is suitable for hackathon demos and local testnet iteration.
 It is not yet production-ready because transaction signing, indexing, settlement
@@ -38,6 +38,7 @@ Key product pages:
 - Tranches: `http://localhost:3000/app/tranche`
 - Tranche detail: `http://localhost:3000/app/tranche/STHS-HIGH-SHORT`
 - PPN: `http://localhost:3000/app/ppn`
+- Distribution Markets: `http://localhost:3000/app/distribution`
 - Docs: `http://localhost:3000/app/docs`
 
 ## Active Sui Testnet Deployment
@@ -77,6 +78,8 @@ On-chain and API:
 - `prediction_market` can create a market, buy YES/NO positions, resolve the
   market, and claim the winning side.
 - Backend Sui routes under `/api/sui` wrap these Sui actions for local use.
+- Distribution routes under `/api/distribution` normalize and quote submitted
+  probability curves before opening Sui-backed local receipts.
 - `/api/sui/status` reports active testnet config, package IDs, and balances.
 
 Frontend:
@@ -93,14 +96,18 @@ Frontend:
 - PPN close resolves and claims the backing position.
 - Tranche buy creates a Sui-backed local position.
 - Tranche sell uses the RFQ modal and executes the local Sui resolve/claim path.
+- Distribution Markets has a working frontend tab, backend quote/open/settle
+  routes, and Sui testnet-backed local receipts. The first implementation is a
+  discrete bucketed probability curve inspired by Paradigm's December 2024
+  distribution-market mechanism.
 
 Verification already completed:
 
 - Frontend production build passed with `npm run build`.
 - Backend TypeScript build passed with `cd backend && npm run build`.
 - Move tests passed with `sui move test --path senthos_sui_v2`.
-- Browser checks passed for basket buy/redeem, PPN open/close, and tranche
-  buy/RFQ sell on localhost.
+- Browser checks passed for basket buy/redeem, PPN open/close, tranche
+  buy/RFQ sell, and distribution quote/open on localhost.
 - Backend API smoke tests produced fresh Sui testnet buy and claim digests.
 
 ## Current Architecture
@@ -116,6 +123,8 @@ The current Sui path is intentionally simple:
    resolves markets, and claims payouts.
 7. Browser-local storage preserves Senthos position continuity for basket,
    tranche, and PPN UI flows.
+8. Distribution Market positions are stored in backend memory for the local
+   session and backed by Sui market/position object IDs.
 
 This lets the full Senthos UI run against real Sui testnet transactions without
 requiring a full production indexer or wallet-signed PTB flow yet.
@@ -130,18 +139,21 @@ complete native Senthos structured-product protocol.
 Needed:
 
 - Replace local mock wrappers with production Move objects for Senthos products:
-  basket vaults, tranche lots, PPN notes, fees, maturities, and settlement.
+  basket vaults, tranche lots, PPN notes, distribution-market curves, fees,
+  maturities, and settlement.
 - Model basket vaults as shared objects with explicit lifecycle states:
   created, active, resolving, resolved, redeemed, cancelled.
 - Add product-level accounting:
   deposits, withdrawals, fees, NAV snapshots, tranche notional, PPN principal
-  allocation, yield sleeve state, and claimable payouts.
+  allocation, distribution bucket/function exposure, yield sleeve state, and
+  claimable payouts.
 - Add permission boundaries:
   admin cap, upgrade cap custody, market creator roles, pause controls, fee
   recipient controls, and emergency resolution policy.
 - Add events for every lifecycle transition:
   market created, vault opened, deposit, redeem, tranche buy, tranche sell,
-  PPN open, PPN close, resolve, claim, fee withdrawal, and admin changes.
+  PPN open, PPN close, distribution curve opened, distribution curve settled,
+  resolve, claim, fee withdrawal, and admin changes.
 - Decide how DeepBook Predict is integrated:
   direct DeepBook Predict positions, or Senthos wrapper positions that settle
   from DeepBook Predict state.
@@ -149,8 +161,8 @@ Needed:
   tied to the chosen prediction-market source.
 - Add invariant-focused Move tests:
   no double claim, no over-redemption, no fee overflow, no losing-side payout,
-  correct pro-rata distribution, correct tranche waterfall, and PPN principal
-  preservation.
+  correct pro-rata distribution, correct tranche waterfall, PPN principal
+  preservation, distribution curve normalization, and payout solvency.
 - Add negative tests for unauthorized resolution, invalid cap use, expired
   markets, zero deposits, stale settlement, and mismatched position ownership.
 - Prepare upgrade strategy:
@@ -174,7 +186,8 @@ Needed:
   user portfolios from chain state rather than browser-local storage.
 - Add persistent database tables for Sui:
   packages, markets, vaults, positions, transactions, claims, tranche lots,
-  PPN notes, account balances, event cursor, and indexed checkpoints.
+  PPN notes, distribution curves, account balances, event cursor, and indexed
+  checkpoints.
 - Add checkpoint cursoring and idempotent replay so the indexer can recover
   after crashes.
 - Add transaction status endpoints keyed by Sui digest.
@@ -203,7 +216,8 @@ Needed:
 - Replace browser-local virtual positions with indexed positions from backend
   Sui state.
 - Replace backend-signed product actions with wallet-signed PTBs:
-  basket buy/sell, tranche buy/sell, PPN open/close, claim, and redeem.
+  basket buy/sell, tranche buy/sell, PPN open/close, distribution open/settle,
+  claim, and redeem.
 - Add transaction review states:
   preparing, wallet approval, submitted, confirmed, indexed, failed, retry.
 - Add Sui Explorer links for every digest and object.
@@ -214,8 +228,8 @@ Needed:
 - Replace Sui local fallback data with explicit loading/empty/error states once
   the indexer is live.
 - Add production-ready docs pages for:
-  architecture, contracts, risks, fees, settlement policy, testnet/mainnet
-  status, and wallet setup.
+  architecture, contracts, risks, distribution-market mechanics, fees,
+  settlement policy, testnet/mainnet status, and wallet setup.
 - Add end-to-end browser tests for every critical path.
 
 ### Data, pricing, and risk

@@ -2,9 +2,9 @@
 
 Senthos is a structured prediction-market interface running locally against a
 Sui testnet Move package. The current build preserves the Senthos product
-surface - baskets, tranches, principal-protected notes, portfolio views, and
-docs - while routing local testnet actions through Sui mock USDC and a Sui
-binary prediction-market module.
+surface - baskets, tranches, principal-protected notes, distribution markets,
+portfolio views, and docs - while routing local testnet actions through Sui mock
+USDC and a Sui binary prediction-market module.
 
 This repository is the Sui-focused hackathon branch. Legacy Traxis/Solana
 handoff docs, Anchor programs, local command scripts, and correlation tarball
@@ -24,6 +24,10 @@ active Sui deployment.
 - Basket sell resolves and claims the Sui position and clears local holdings.
 - PPN open/close exercises the Sui-backed local position path.
 - Tranche buy/RFQ sell exercises the Sui-backed local position path.
+- Distribution Markets has a dedicated product tab inspired by Paradigm's
+  distribution-market design: the UI submits a full bucketed probability curve,
+  the backend normalizes/prices it, and a Sui testnet receipt is opened through
+  the mock-USDC harness.
 - Frontend build, backend build, and Move tests pass locally.
 
 ## Important Caveat
@@ -122,7 +126,9 @@ Open:
 - Baskets: `http://localhost:3000/app/basket`
 - Tranches: `http://localhost:3000/app/tranche`
 - PPN: `http://localhost:3000/app/ppn`
+- Distribution Markets: `http://localhost:3000/app/distribution`
 - Backend status: `http://localhost:3001/api/sui/status`
+- Distribution API: `http://localhost:3001/api/distribution/templates`
 - Monitor: `http://localhost:3002`
 
 ## Verification
@@ -168,6 +174,18 @@ Main local Sui routes:
 The `/api/sui/local/basket/*` routes are the current local bridge used by
 basket, tranche, and PPN UI flows.
 
+Distribution market routes:
+
+- `GET /api/distribution/templates`
+- `POST /api/distribution/quote`
+- `POST /api/distribution/open`
+- `GET /api/distribution/positions`
+- `POST /api/distribution/positions/:id/settle`
+
+The distribution product currently uses a discrete bucketed approximation of
+Paradigm's full distribution market idea. It is wired through the same Sui
+mock-USDC receipt path as the rest of the hackathon harness.
+
 ## Documentation
 
 - `detailed.md` - where the project stands and what is needed for production.
@@ -183,7 +201,8 @@ The short version:
 2. Add real Sui wallet connect/signing in the frontend.
 3. Build a Sui event/object indexer.
 4. Replace browser-local virtual positions with indexed chain state.
-5. Move basket, tranche, and PPN accounting into native audited Move modules.
+5. Move basket, tranche, PPN, and distribution-market accounting into native
+   audited Move modules.
 6. Integrate DeepBook Predict or an explicit settlement source.
 7. Add CI for frontend, backend, Move tests, browser e2e, and secret scanning.
 

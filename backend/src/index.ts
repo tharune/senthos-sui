@@ -24,6 +24,7 @@ import portfolioRoutes from './routes/portfolio';
 import vaultRoutes from './routes/vaults';
 import { devRoutes } from './routes/dev';
 import { suiRoutes } from './routes/sui';
+import { distributionRoutes } from './routes/distribution';
 import { metricsMiddleware } from './services/metrics';
 import { startMonitorServer } from './monitor/server';
 import { startCronJobs } from './services/cron';
@@ -192,6 +193,7 @@ app.use('/api/vaults', vaultRoutes);
 app.use('/api/portfolio', portfolioLimiter, portfolioRoutes);
 app.use('/api/dev', devRoutes);
 app.use('/api/sui', suiRoutes);
+app.use('/api/distribution', distributionRoutes);
 
 // Root redirect to API docs
 app.get('/', (_req, res) => res.redirect('/api/docs'));

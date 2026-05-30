@@ -2,7 +2,8 @@
 
 Express + TypeScript backend for the Senthos Sui local testnet harness.
 
-The active Sui path is exposed under `/api/sui`. It wraps the deployed
+The active Sui path is exposed under `/api/sui`, with product-level
+distribution-market routes under `/api/distribution`. These wrap the deployed
 `senthos_sui_v2` Move package, mock USDC, and local prediction-market actions
 used by the frontend demo.
 
@@ -19,6 +20,7 @@ Backend:
 - API: `http://localhost:3001`
 - Monitor: `http://localhost:3002`
 - Sui status: `http://localhost:3001/api/sui/status`
+- Distribution templates: `http://localhost:3001/api/distribution/templates`
 
 ## Environment
 
@@ -50,6 +52,18 @@ Supabase as `not_configured` while keeping the overall status `ok`.
 - `POST /api/sui/local/basket/redeem`
 
 The `local/basket` routes are also used by current PPN and tranche UI flows.
+
+## Distribution Routes
+
+- `GET /api/distribution/templates`
+- `POST /api/distribution/quote`
+- `POST /api/distribution/open`
+- `GET /api/distribution/positions`
+- `POST /api/distribution/positions/:id/settle`
+
+These routes support the Distribution Markets tab. The backend accepts the full
+bucketed probability curve from the UI, returns quote analytics, and opens a
+Sui testnet-backed mock-USDC receipt through the local harness.
 
 ## Build
 
